@@ -124,7 +124,7 @@ def factor_gaussian(z):
     
     return factors
 
-if __name__ == "__main__":
+def use_example():
     test_numbers = [
         complex(5, 0),   # 5 se factoriza en (2+i) y (2-i) (o sus asociados)
         complex(7, 0),   # 7 es primo en Z[i] (ya que 7 ≡ 3 mod 4)
@@ -170,3 +170,6 @@ if __name__ == "__main__":
         except ValueError as e:
             print(e)
         print("-" * 40)
+
+if __name__ == "__main__":
+    use_example()

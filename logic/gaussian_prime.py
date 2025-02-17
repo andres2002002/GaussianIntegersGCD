@@ -23,29 +23,37 @@ def is_gaussian_prime(z):
     - Si uno de a o b es 0 (es decir, z es puramente real o imaginario),
         z es primo si y solo si |a| (o |b|) es primo en Z y además es congruente a 3 mod 4.
     """
+    reason = ""
     # Extraer partes real e imaginaria (aseguramos que sean enteras)
     a = int(z.real)
     b = int(z.imag)
     
     # El cero no es primo
     if a == 0 and b == 0:
-        return False
+        reason = "El cero no es primo"
+        return False, reason
     
     # Verificar unidades: 1, -1, i, -i tienen norma 1
     if a*a + b*b == 1:
-        return False
+        reason = "Unidades no son primas"
+        return False, reason
 
     # Si ambas partes son no nulas, usamos la norma
     if a != 0 and b != 0:
         norm = a*a + b*b
-        return is_prime_integer(norm)
+        if is_prime_integer(norm):
+            return True, "Norma es un número primo en Z"
+        else:
+            return False, "Norma no es un número primo en Z"
     else:
         # Caso en que z es puramente real o puramente imaginario
         p = abs(a) if a != 0 else abs(b)
-        return is_prime_integer(p) and (p % 4 == 3)
+        if is_prime_integer(p) and (p % 4 == 3):
+            return True, "|a| o |b| es primo en Z y congruente a 3 mod 4"
+        else:
+            return False, "|a| o |b| no es primo en Z o no es congruente a 3 mod 4"
 
-
-if __name__ == "__main__":
+def use_example():
     # Ejemplos de uso
     test_numbers = [
         complex(3, 0),   # 3 es primo en Z[i] porque 3 mod 4 == 3.
@@ -61,5 +69,9 @@ if __name__ == "__main__":
     ]
 
     for z in test_numbers:
-        result = "primo" if is_gaussian_prime(z) else "no primo"
-        print(f"{z} es {result}")
+        is_prime, reason = is_gaussian_prime(z)
+        result = "primo" if is_prime else "no primo"
+        print(f"{z} es {result} porque {reason}")
+
+if __name__ == "__main__":
+    use_example()

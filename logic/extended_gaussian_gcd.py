@@ -1,53 +1,85 @@
-from gaussian_gcd import gaussian_division
+from .gaussian_gcd import gaussian_division
+
+def recursive_process(a, b, add_step):
+    """
+    Implementa el algoritmo de Euclides extendido para los enteros gaussianos.
+    
+    Parámetros:
+    - a, b: Números complejos representando enteros gaussianos.
+    - add_step: Función para registrar los pasos de ejecución.
+    
+    Retorna:
+    - (g, u, v): Donde g es el máximo común divisor de (a, b),
+    y (u, v) son los coeficientes de Bézout tales que g = a*u + b*v.
+    """
+    if b == 0:
+        add_step(f"Base: gcd({a}, {b}) = {a}")
+        return a, 1, 0
+
+    q = gaussian_division(a, b)
+    r = a - q * b
+    
+    add_step(f"{a} = ({q}) * {b} + {r}")
+    
+    g, u1, v1 = recursive_process(b, r, add_step)
+    u = v1
+    v = u1 - q * v1
+    return g, u, v
 
 def extended_gaussian_gcd(a, b, verbose=False):
     """
     Algoritmo de Euclides extendido para enteros gaussianos.
     
-    Retorna una tupla (g, u, v) tal que:
-        g = gcd(a, b)  y  g = a*u + b*v.
+    Retorna:
+        (g, u, v, steps)
+    
+    Donde:
+    - g = gcd(a, b)
+    - u, v son los coeficientes de Bézout: g = a*u + b*v
+    - steps es una lista de los pasos de ejecución del algoritmo.
     
     Parámetros:
     - a, b: enteros gaussianos.
     - verbose: si True, imprime los pasos del algoritmo.
     """
-    if b == 0:
-        if verbose:
-            print(f"Base: gcd({a}, {b}) = {a}")
-        return a, 1, 0
-
-    q = gaussian_division(a, b)
-    r = a - q * b
-    if verbose:
-        print(f"{a} = ({q}) * {b} + {r}")
+    steps = ["Iniciando cálculo..."]
     
-    g, u1, v1 = extended_gaussian_gcd(b, r, verbose)
-    # Se tiene: r = a - q*b, y: g = b*u1 + r*v1 = a*v1 + b*(u1 - q*v1)
-    u = v1
-    v = u1 - q * v1
-    return g, u, v
+    # Ejecutar la recursión con seguimiento de pasos
+    g, u, v = recursive_process(a, b, lambda step: steps.append(step))
+    # Agregar información final
+    steps.append("Resultado:")
+    steps.append(f"gcd({a}, {b}) = {g}")
+    steps.append(f"Coeficientes: u = {u}, v = {v}")
+    steps.extend(verify_gcd(a, u, b, v, g))
+
+    if verbose:
+        for step in steps:
+            print(step)
+    
+    return g, u, v, steps
 
 def verify_gcd(a, u, b, v, g):
     """
     Verifica paso a paso que g = a*u + b*v.
     """
-    print("Verificación:")
-    print(f"{a}*{u} + {b}*{v} = {a*u} + {b*v}")
+    steps = []
+    steps.append("Verificación:")
+    steps.append(f"{a}*{u} + {b}*{v} = {a*u} + {b*v}")
     resultado = a*u + b*v
-    print(f"{a}*{u} + {b}*{v} = {resultado}")
+    steps.append(f"{a}*{u} + {b}*{v} = {resultado}")
     if resultado == g:
-        print("El resultado es Correcto!")
+        steps.append("El resultado es Correcto!")
     else:
-        print("Algo salió mal :(")
+        steps.append("Algo salió mal :(")
+    return steps
 
-if __name__ == "__main__":
+def use_example():
     # Ejemplo de uso
-    a = complex(11, 3)
-    b = complex(1, 8)
+    a = complex(6, 9)
+    b = complex(5, 1)
 
     print("Algoritmo de Euclides extendido para enteros gaussianos:\n")
-    g, u, v = extended_gaussian_gcd(a, b, verbose=True)
-    print("\nResultado:")
-    print(f"gcd({a}, {b}) = {g}")
-    print(f"Coeficientes: u = {u},  v = {v}")
-    verify_gcd(a, u, b, v, g)
+    extended_gaussian_gcd(a, b, verbose=True)
+
+if __name__ == "__main__":
+    use_example()

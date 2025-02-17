@@ -50,27 +50,38 @@ def gaussian_gcd(a, b, with_variants=False, verbose=False):
     - Si with_variants es True: lista con las variantes del MCD.
     - En otro caso: el MCD canónico.
     """
-    if verbose:
-        print(f"Iniciando cálculo del MCD de {a} y {b}")
+    steps = []  # Guardar los pasos del algoritmo para un procedimiento más claro
+    steps.append(f"Iniciando cálculo del MCD de {a} y {b}")
     while b != 0:
         q = gaussian_division(a, b)
         r = a - q * b
-        if verbose:
-            print(f"{a} = ({q}) * {b} + {r}")
+        steps.append(f"{a} = ({q}) * {b} + {r}")
         a, b = b, r
+    
+    steps.append("Proceso completo:")
+    steps.append(f"MCD encontrado: {a}")
+    
     if verbose:
-        print("MCD encontrado:", a)
-    return generate_variants(a) if with_variants else a
+        for step in steps:
+            print(step)
+    
+    if with_variants:
+        return generate_variants(a), steps  # Si se piden variantes, devuelve ambas cosas
+    else:
+        return a, steps  # Si no se piden variantes, solo el MCD y los pasos
 
-if __name__ == "__main__":
+def use_example():
     # Ejemplo de uso
     a = complex(11, 3)
     b = complex(1, 8)
 
     print("Cálculo detallado con variantes:")
-    result_variants = gaussian_gcd(a, b, with_variants=True, verbose=True)
+    result_variants, steps1 = gaussian_gcd(a, b, with_variants=True, verbose=True)
     print(f"\nMCD({a}, {b}) variantes: {result_variants}")
 
     print("\nCálculo rápido (MCD canónico):")
-    result_canonical = gaussian_gcd(a, b, with_variants=False, verbose=True)
+    result_canonical, steps2 = gaussian_gcd(a, b, with_variants=False, verbose=True)
     print(f"\nMCD({a}, {b}) = {result_canonical}")
+
+if __name__ == "__main__":
+    use_example()
