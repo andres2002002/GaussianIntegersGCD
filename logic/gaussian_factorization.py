@@ -136,8 +136,11 @@ if __name__ == "__main__":
         complex(-2319, -1694),  # Factorización con números grandes
         complex(16729, 0),
         complex(10, 91),
-        complex(485062, 852697), # me dieron ganas de probarlo
-        complex(785051162, 85269456947) # lo hace muy rapido :o que miedo
+        complex(485062, 852697), # lo hace muy rapido :o que miedo
+        # por fin se trabo, que alivio, que clase de loco haria esto con un programa random de python,
+        # nota: tardo 5:38.917s en obtener esta factorizacion en mi pc y 7 min 11 s en google colab asi que decidi comentarla pero
+        # parece que es un primo, que loco, no?
+        # complex(785051162, 85269456947)
     ]
     
     for z in test_numbers:
